@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meia Avião</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <header>
+        <h1>Meia Avião</h1>
+    </header>
+
+    <div class="tabs">
+        <button data-tab="suggest-route">Sugerir Rota</button>
+        <button data-tab="view-routes">Rotas Sugeridas</button>
+    </div>
+
+    <div id="suggest-route" class="tab-content">
+        <form id="suggestRouteForm">
+            <input type="text" id="name" placeholder="Seu Nome">
+            <input type="text" id="origin" placeholder="ICAO Origem">
+            <input type="text" id="destination" placeholder="ICAO Destino">
+            <button type="submit">Sugerir Rota</button>
+        </form>
+    </div>
+
+    <div id="view-routes" class="tab-content">
+        <div id="routesContainer"></div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
