@@ -1,0 +1,8 @@
+[build]
+  command = "pip install -r requirements.txt && python app.py" # Comando para rodar o Flask
+  publish = "public" # Ajuste conforme necessário (geralmente Flask não gera um diretório "public")
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
