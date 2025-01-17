@@ -50,6 +50,3 @@ def get_routes():
         routes = cursor.fetchall()
 
     return jsonify([{"name": row[0], "origin": row[1], "destination": row[2]} for row in routes])
-
-if __name__ == "__main__":
-    app.run(debug=True)
