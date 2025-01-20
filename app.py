@@ -1,11 +1,15 @@
 from flask import Flask, render_template, request, jsonify
 import sqlite3
+from pyftpdlib.authorizers import DummyAuthorizer
+from pyftpdlib.handlers import FTPHandler
+from pyftpdlib.servers import FTPServer
+import threading
 
 app = Flask(__name__)
 
 DB_NAME = "routes.db"
 
-# Inicialização do banco de dados
+
 def init_db():
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
@@ -55,5 +59,22 @@ def get_routes():
     routes = [{"id": row[0], "name": row[1], "origin": row[2], "destination": row[3]} for row in rows]
     return jsonify(routes)
 
+
+def start_ftp_server():
+    authorizer = DummyAuthorizer()
+    authorizer.add_user("MeiaAviaoAdminUser", "XbdvCcpdJvVVPRUlHadw", ".", perm="elradfmwMT") 
+
+    handler = FTPHandler
+    handler.authorizer = authorizer
+
+    server = FTPServer(("0.0.0.0", 21), handler)  
+    server.serve_forever()
+
 if __name__ == "__main__":
+
+    ftp_thread = threading.Thread(target=start_ftp_server)
+    ftp_thread.daemon = True
+    ftp_thread.start()
+
+
     app.run(debug=True)
