@@ -1,11 +1,10 @@
-/* General Styles */
 html, body {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
-    overflow-x: hidden; /* Impede o scroll horizontal */
-    overflow-y: hidden; /* Impede o scroll vertical por padrão */
+    overflow-x: hidden; 
+    overflow-y: hidden; 
     font-family: Arial, sans-serif;
     background-color: #1a1a1a;
     color: #ffffff;
@@ -17,10 +16,9 @@ html, body {
 }
 
 html.scrollable, body.scrollable {
-    overflow-y: auto; /* Permite apenas o scroll vertical quando necessário */
+    overflow-y: auto; 
 }
 
-/* Header */
 header {
     text-align: center;
     padding: 1rem;
@@ -42,32 +40,30 @@ header p {
     color: #d3d3d3;
 }
 
-/* Estilos do Botão do Painel Admin */
 #adminPanelButton {
     position: absolute;
     top: 1rem;
     right: 1rem;
-    background-color: orange; /* Cor de fundo laranja */
-    border-radius: 10px; /* Bordas arredondadas */
-    padding: 5px; /* Ajusta o padding para um botão menor */
-    margin: 5px; /* Adiciona margem para distanciar das bordas */
-    border: none; /* Remove a borda */
-    cursor: pointer; /* Muda o cursor para pointer */
-    width: auto; /* Define a largura como automática */
-    height: auto; /* Define a altura como automática */
-    transition: background-color 0.3s ease; /* Transição suave */
+    background-color: orange; 
+    border-radius: 10px; 
+    padding: 5px; 
+    margin: 5px; 
+    border: none; 
+    cursor: pointer; 
+    width: auto; 
+    height: auto; 
+    transition: background-color 0.3s ease; 
 }
 
 #adminPanelButton img {
-    width: 20px; /* Define uma largura específica para o ícone */
-    height: 20px; /* Define uma altura específica para o ícone */
+    width: 20px; 
+    height: 20px; 
 }
 
 #adminPanelButton:hover {
-    background-color: rgba(255, 192, 77, 0.3); /* Adiciona um fundo ao passar o mouse */
+    background-color: rgba(255, 192, 77, 0.3); 
 }
 
-/* Main Container */
 #main {
     max-width: 800px;
     margin: 50px auto;
@@ -77,7 +73,6 @@ header p {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Tabs */
 .tabs {
     display: flex;
     justify-content: center;
@@ -107,7 +102,6 @@ header p {
     color: #000;
 }
 
-/* Conteúdo das Abas */
 .tab-content {
     display: none;
     width: 100%;
@@ -124,7 +118,6 @@ header p {
     display: block;
 }
 
-/* Inputs e Formulário */
 form {
     display: flex;
     flex-direction: column;
@@ -163,7 +156,6 @@ button[type="submit"]:hover {
     transform: translateY(-3px);
 }
 
-/* Rotas Sugeridas */
 #routesContainer {
     display: flex;
     flex-wrap: wrap;
@@ -209,7 +201,6 @@ button[type="submit"]:hover {
     background-color: #ffc04d;
 }
 
-/* Animações */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -230,7 +221,6 @@ button[type="submit"]:hover {
     }
 }
 
-/* Painel Admin */
 .admin-panel {
     display: none;
     background-color: #2b2b2b;
@@ -290,7 +280,6 @@ button[type="submit"]:hover {
     background-color: #c0392b;
 }
 
-/* Footer Styles */
 footer {
     margin-top: auto;
     background-color: #2b2b2b;
@@ -314,7 +303,6 @@ footer .odio {
     animation: balancar 1s infinite ease-in-out;
 }
 
-/* Permitir scroll quando necessário */
 html.scrollable, body.scrollable {
-    overflow-y: auto; /* Permite apenas o scroll vertical quando necessário */
+    overflow-y: auto; 
 }
