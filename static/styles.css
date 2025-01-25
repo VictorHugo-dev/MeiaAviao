@@ -1,0 +1,320 @@
+/* General Styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden; /* Impede o scroll horizontal */
+    overflow-y: hidden; /* Impede o scroll vertical por padrão */
+    font-family: Arial, sans-serif;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 100vh;
+}
+
+html.scrollable, body.scrollable {
+    overflow-y: auto; /* Permite apenas o scroll vertical quando necessário */
+}
+
+/* Header */
+header {
+    text-align: center;
+    padding: 1rem;
+    background-color: #2b2b2b;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin: 0;
+    color: #f5a623;
+}
+
+header p {
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    color: #d3d3d3;
+}
+
+/* Estilos do Botão do Painel Admin */
+#adminPanelButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: orange; /* Cor de fundo laranja */
+    border-radius: 10px; /* Bordas arredondadas */
+    padding: 5px; /* Ajusta o padding para um botão menor */
+    margin: 5px; /* Adiciona margem para distanciar das bordas */
+    border: none; /* Remove a borda */
+    cursor: pointer; /* Muda o cursor para pointer */
+    width: auto; /* Define a largura como automática */
+    height: auto; /* Define a altura como automática */
+    transition: background-color 0.3s ease; /* Transição suave */
+}
+
+#adminPanelButton img {
+    width: 20px; /* Define uma largura específica para o ícone */
+    height: 20px; /* Define uma altura específica para o ícone */
+}
+
+#adminPanelButton:hover {
+    background-color: rgba(255, 192, 77, 0.3); /* Adiciona um fundo ao passar o mouse */
+}
+
+/* Main Container */
+#main {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+.tabs button {
+    background-color: #333;
+    color: #fff;
+    border: 2px solid #555;
+    padding: 0.7rem 1.5rem;
+    margin: 0 0.5rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tabs button:hover {
+    background-color: #555;
+    transform: scale(1.1);
+}
+
+.tabs button:focus {
+    outline: none;
+    background-color: #f5a623;
+    color: #000;
+}
+
+/* Conteúdo das Abas */
+.tab-content {
+    display: none;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #2b2b2b;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    animation: fadeIn 0.5s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Inputs e Formulário */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+input {
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 2px solid #555;
+    border-radius: 10px;
+    background-color: #1a1a1a;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: #f5a623;
+    box-shadow: 0 0 5px #f5a623;
+}
+
+button[type="submit"] {
+    background-color: #f5a623;
+    color: #000;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #ffc04d;
+    transform: translateY(-3px);
+}
+
+/* Rotas Sugeridas */
+#routesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.route {
+    background-color: rgba(26, 26, 26, 0.9);
+    padding: 1.5rem;
+    border-radius: 15px;
+    border: 2px solid #FFFFFF;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    width: 250px;
+    text-align: center;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+    color: #fff;
+}
+
+.route.highlight {
+    border-color: #00FF00;
+}
+
+.route:hover {
+    transform: translateY(-5px);
+    background-color: rgba(50, 50, 50, 0.9);
+}
+
+.route button {
+    background-color: #f5a623;
+    color: #000;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.route button:hover {
+    background-color: #ffc04d;
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes balancar {
+    0%, 100% {
+        transform: rotate(-5deg);
+    }
+    50% {
+        transform: rotate(5deg);
+    }
+}
+
+/* Painel Admin */
+.admin-panel {
+    display: none;
+    background-color: #2b2b2b;
+    color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    margin-top: 2rem;
+    z-index: 1000;
+    width: 90%;
+    max-width: 400px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.admin-panel.active {
+    display: block;
+}
+
+.admin-panel h2 {
+    text-align: center;
+}
+
+.admin-panel table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: #2b2b2b;
+    color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.admin-panel th, .admin-panel td {
+    padding: 1rem;
+    border: 1px solid #444;
+    text-align: center;
+}
+
+.admin-panel th {
+    background-color: #333;
+}
+
+.delete-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Footer Styles */
+footer {
+    margin-top: auto;
+    background-color: #2b2b2b;
+    color: #ffffff;
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 1rem;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.5);
+    width: 100%;
+}
+
+footer p {
+    margin: 0;
+}
+
+footer .odio {
+    color: #ff0000;
+    font-weight: bold;
+    text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff4500;
+    display: inline-block;
+    animation: balancar 1s infinite ease-in-out;
+}
+
+/* Permitir scroll quando necessário */
+html.scrollable, body.scrollable {
+    overflow-y: auto; /* Permite apenas o scroll vertical quando necessário */
+}

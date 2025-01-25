@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meia Avião</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <header>
+        <h1>Meia Avião</h1>
+        <button id="adminPanelButton" onclick="window.location.href='/admin-panel'">
+            <img src="/static/Cog.ico" alt="Admin Panel" />
+        </button>
+    </header>
+
+    <div class="tabs">
+        <button data-tab="suggest-route">Sugerir Rota</button>
+        <button data-tab="view-routes">Rotas Sugeridas</button>
+    </div>
+
+    <div id="suggest-route" class="tab-content">
+        <form id="suggestRouteForm">
+            <input type="text" id="name" placeholder="Seu Nome">
+            <input type="text" id="origin" placeholder="ICAO Origem">
+            <input type="text" id="destination" placeholder="ICAO Destino">
+            <button type="submit">Sugerir Rota</button>
+        </form>
+    </div>
+
+    <div id="view-routes" class="tab-content">
+        <div id="routesContainer"></div>
+    </div>
+
+    <div id="adminLogin" class="admin-panel">
+        <h2>Login Admin</h2>
+        <form id="adminLoginForm">
+            <input type="text" id="adminUsername" placeholder="Username">
+            <input type="password" id="adminPassword" placeholder="Senha">
+            <button type="submit">Entrar</button>
+        </form>
+    </div>
+
+    <div id="adminDashboard" class="admin-panel">
+        <h2>Painel Admin</h2>
+        <div id="adminRoutesContainer"></div>
+    </div>
+    <footer>
+        <p>Feito com muito <span class="odio">ódio</span> por VH e com uma ajudinha do C3</p>
+    </footer>
+    <script src="/static/script.js"></script>
+</body>
+</html>
