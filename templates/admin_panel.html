@@ -6,11 +6,11 @@
     <title>Painel Admin</title>
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Truculenta:wght@700&display=swap" rel="stylesheet">
     <style>
-        /* General Styles */
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Truculenta', Arial, sans-serif;
     background-color: #1a1a1a;
     color: #ffffff;
     display: flex;
@@ -19,7 +19,6 @@ body {
     min-height: 100vh;
 }
 
-/* Header */
 header {
     text-align: center;
     padding: 1rem;
@@ -54,7 +53,6 @@ header button:hover {
     transform: scale(1.05);
 }
 
-/* Container */
 .container {
     max-width: 800px;
     margin: 50px auto;
@@ -70,7 +68,6 @@ header button:hover {
     color: #f5a623;
 }
 
-/* Table Styles */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -92,7 +89,6 @@ table th {
     color: #f5a623;
 }
 
-/* Buttons */
 button.delete-btn {
     background-color: #e74c3c;
     color: #fff;
@@ -107,7 +103,6 @@ button.delete-btn:hover {
     background-color: #c0392b;
 }
 
-/* Messages */
 .message {
     color: #2ecc71;
     font-weight: bold;
@@ -142,18 +137,15 @@ button.delete-btn:hover {
                 </tr>
             </thead>
             <tbody>
-                <!-- As rotas serão carregadas aqui via JavaScript -->
             </tbody>
         </table>
     </div>
 
     <script>
-        // Carregar as rotas ao carregar a página
         document.addEventListener("DOMContentLoaded", () => {
             fetchRoutes();
         });
 
-        // Função para buscar as rotas
         async function fetchRoutes() {
             try {
                 const response = await fetch('/routes');
@@ -170,10 +162,9 @@ button.delete-btn:hover {
             }
         }
 
-        // Função para preencher a tabela com as rotas
         function populateTable(routes) {
             const tableBody = document.querySelector('#routesTable tbody');
-            tableBody.innerHTML = ''; // Limpar a tabela antes de preenchê-la
+            tableBody.innerHTML = '';
 
             routes.forEach(route => {
                 const row = document.createElement('tr');
@@ -194,7 +185,6 @@ button.delete-btn:hover {
             addDeleteEventListeners();
         }
 
-        // Adicionar eventos aos botões de exclusão
         function addDeleteEventListeners() {
             const deleteButtons = document.querySelectorAll('.delete-btn');
 
@@ -206,9 +196,9 @@ button.delete-btn:hover {
                         const response = await fetch(`/delete-route/${routeId}`, { method: 'POST' });
 
                         if (response.ok) {
-                            button.closest('tr').remove(); // Remove a linha da tabela
+                            button.closest('tr').remove();
                             document.getElementById('message').innerText = "Rota deletada com sucesso.";
-                            document.getElementById('error').innerText = ""; // Limpar mensagens de erro
+                            document.getElementById('error').innerText = "";
                         } else {
                             const data = await response.json();
                             document.getElementById('error').innerText = data.error || "Erro ao deletar rota.";
