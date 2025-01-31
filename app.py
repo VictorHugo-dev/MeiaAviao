@@ -1,121 +1,174 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_from_directory
+from flask_wtf.csrf import CSRFProtect, generate_csrf
 import sqlite3
 import os
-import secrets
+from functools import wraps
+from contextlib import closing
 
 app = Flask(__name__)
-app.secret_key = secrets.token_urlsafe(16)  # Generate a random secret key
+app.secret_key = 'vaDERATEInGsTRaTIPSTYpHOlerTRAVAlIgArisIVernentEnT'
+csrf = CSRFProtect(app)
 
-DB_NAME = "routes.db"
+DATABASE_NAME = 'routes.db'
+ADMIN_CREDENTIALS = {
+    'username': 'MeiaAviaoAdminUser',
+    'password': 'XbdvCcpdJvVVPRUlHadw'
+}
 
-# Inicialização do banco de dados
+class Route:
+    def __init__(self, route_id, name, origin, destination):
+        self.id = route_id
+        self.name = name
+        self.origin = origin.upper()
+        self.destination = destination.upper()
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'origin': self.origin,
+            'destination': self.destination
+        }
+
+def get_db():
+    conn = sqlite3.connect(DATABASE_NAME)
+    conn.row_factory = sqlite3.Row
+    return conn
+
 def init_db():
-    with sqlite3.connect(DB_NAME) as conn:
-        cursor = conn.cursor()
-        cursor.execute('''
+    with closing(get_db()) as conn:
+        conn.execute('''
             CREATE TABLE IF NOT EXISTS routes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
-                origin TEXT NOT NULL,
-                destination TEXT NOT NULL
+                origin TEXT NOT NULL CHECK(length(origin) = 4),
+                destination TEXT NOT NULL CHECK(length(destination) = 4)
             )
         ''')
         conn.commit()
 
-init_db()
+def admin_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not session.get('admin'):
+            return redirect(url_for('admin_login'))
+        return f(*args, **kwargs)
+    return decorated
 
-# Página inicial
-@app.route("/")
+@app.route('/')
 def home():
-    return render_template("index.html")
+    return render_template('index.html')
 
-# Login do Admin
-@app.route("/admin-login", methods=["GET", "POST"])
-def admin_login():
-    if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+@app.after_request
+def set_csrf_cookie(response):
+    if response.status_code == 200:
+        response.set_cookie('csrf_token', generate_csrf())
+    return response
 
-        # Hardcoded credentials for testing
-        if username == "MeiaAviaoAdminUser" and password == "XbdvCcpdJvVVPRUlHadw":
-            session["admin"] = True
-            return redirect(url_for("admin_panel"))
-        else:
-            return render_template("admin_login.html", error="Credenciais inválidas")
-    
-    return render_template("admin_login.html")
+@app.route('/routes')
+def list_routes():
+    try:
+        with get_db() as conn:
+            routes = conn.execute('''
+                SELECT id, name, origin, destination
+                FROM routes
+                ORDER BY id DESC
+            ''').fetchall()
+            return jsonify([dict(route) for route in routes])
+    except sqlite3.Error as e:
+        app.logger.error(f'Database error: {str(e)}')
+        return jsonify({'error': 'Erro ao buscar rotas'}), 500
 
-# Painel Admin
-@app.route("/admin-panel")
-def admin_panel():
-    if not session.get("admin"):
-        return redirect(url_for("admin_login"))
-    
-    with sqlite3.connect(DB_NAME) as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT id, name, origin, destination FROM routes")
-        rows = cursor.fetchall()
-
-    routes = [{"id": row[0], "name": row[1], "origin": row[2], "destination": row[3]} for row in rows]
-
-    # Debug print to check fetched routes
-    print("Fetched routes:", routes)
-
-    return render_template("admin_panel.html", routes=routes)  # Render admin_panel.html with routes
-
-# Suggest Route
-@app.route("/suggest-route", methods=["POST"])
+@app.route('/suggest-route', methods=['POST'])
 def suggest_route():
-    name = request.json.get("name")
-    origin = request.json.get("origin")
-    destination = request.json.get("destination")
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'Nenhum dado foi enviado'}), 400
 
-    with sqlite3.connect(DB_NAME) as conn:
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO routes (name, origin, destination) VALUES (?, ?, ?)", (name, origin, destination))
-        conn.commit()
+        required_fields = ['name', 'origin', 'destination']
+        if not all(field in data and isinstance(data[field], str) for field in required_fields):
+            return jsonify({'error': 'Todos os campos são obrigatórios e devem ser strings'}), 400
 
-    return jsonify({"message": "Rota sugerida com sucesso!"}), 201
+        origin = data['origin'].strip().upper()
+        destination = data['destination'].strip().upper()
+        
+        if len(origin) != 4 or not origin.isalpha():
+            return jsonify({'error': 'Código ICAO de origem inválido'}), 400
+            
+        if len(destination) != 4 or not destination.isalpha():
+            return jsonify({'error': 'Código ICAO de destino inválido'}), 400
 
-# Dashboard Admin
-@app.route("/admin")
-def admin_dashboard():
-    if not session.get("admin"):
-        return redirect(url_for("admin_login"))
+        with get_db() as conn:
+            cursor = conn.execute('''
+                INSERT INTO routes (name, origin, destination)
+                VALUES (?, ?, ?)
+            ''', (data['name'].strip(), origin, destination))
+            
+            conn.commit()
+            
+            new_route = Route(cursor.lastrowid, data['name'].strip(), origin, destination)
+            
+            return jsonify({
+                'message': 'Rota cadastrada com sucesso',
+                'route': new_route.to_dict()
+            }), 201
+            
+    except sqlite3.IntegrityError:
+        return jsonify({'error': 'Erro de integridade nos dados'}), 400
+    except Exception as e:
+        app.logger.error(f'Erro: {str(e)}')
+        return jsonify({'error': 'Erro interno no servidor'}), 500
+
+@app.route('/admin-login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        if username == ADMIN_CREDENTIALS['username'] and password == ADMIN_CREDENTIALS['password']:
+            session['admin'] = True
+            return redirect(url_for('admin_panel'))
+        return render_template('admin_login.html', error='Credenciais inválidas')
     
-    # Você pode adicionar lógica para buscar estatísticas ou dados
-    stats = {"users": 120, "messages": 450, "active_sessions": 15}
-    return render_template("admin.html", stats=stats)
+    return render_template('admin_login.html')
 
-# Deletar rota
-@app.route("/delete-route/<int:route_id>", methods=["POST"])
+@app.route('/admin-panel')
+@admin_required
+def admin_panel():
+    try:
+        with get_db() as conn:
+            routes = conn.execute('''
+                SELECT id, name, origin, destination
+                FROM routes
+                ORDER BY id DESC
+            ''').fetchall()
+            
+            return render_template('admin_panel.html', routes=routes)
+    except sqlite3.Error as e:
+        return render_template('admin_panel.html', error='Erro ao carregar rotas')
+
+@app.route('/delete-route/<int:route_id>', methods=['POST'])
+@admin_required
 def delete_route(route_id):
-    if not session.get("admin"):
-        return jsonify({"error": "Não autorizado"}), 403
+    try:
+        with get_db() as conn:
+            result = conn.execute('DELETE FROM routes WHERE id = ?', (route_id,))
+            conn.commit()
+            if result.rowcount == 0:
+                return jsonify({'error': 'Rota não encontrada'}), 404
+            return jsonify({'message': 'Rota removida com sucesso'}), 200
+    except sqlite3.Error as e:
+        return jsonify({'error': 'Erro ao excluir rota'}), 500
 
-    with sqlite3.connect(DB_NAME) as conn:
-        cursor = conn.cursor()
-        cursor.execute("DELETE FROM routes WHERE id = ?", (route_id,))
-        conn.commit()
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(
+        os.path.join(app.root_path, 'static'),
+        'favicon.ico',
+        mimetype='image/vnd.microsoft.icon'
+    )
 
-    return jsonify({"message": "Rota deletada com sucesso!"})
-
-# Logout do Admin
-@app.route("/admin-logout")
-def admin_logout():
-    session.pop("admin", None)
-    return redirect(url_for("home"))
-
-# New route for getting routes
-@app.route("/routes")
-def get_routes():
-    with sqlite3.connect(DB_NAME) as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT id, name, origin, destination FROM routes")
-        rows = cursor.fetchall()
-
-    routes = [{"id": row[0], "name": row[1], "origin": row[2], "destination": row[3]} for row in rows]
-    return jsonify(routes)
-
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__ == '__main__':
+    init_db()
+    app.run(host='0.0.0.0', port=5000, debug=False)

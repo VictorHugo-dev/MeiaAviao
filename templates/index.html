@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,46 +10,86 @@
 </head>
 <body>
     <header>
-        <h1>Meia Avião</h1>
-        <button id="adminPanelButton" onclick="window.location.href='/admin-panel'">
-            <img src="/static/Cog.ico" alt="Admin Panel" />
+        <h1>Meia Avião ✈️</h1>
+        <button id="adminPanelButton" onclick="window.location.href='/admin-login'">
+            <img src="/static/Cog.ico" alt="Painel Administrativo">
         </button>
     </header>
 
-    <div class="tabs">
-        <button data-tab="suggest-route">Sugerir Rota</button>
-        <button data-tab="view-routes">Rotas Sugeridas</button>
-    </div>
+    <main id="main">
+        <div class="tabs">
+            <button class="active" data-tab="suggest-route">Sugerir Nova Rota</button>
+            <button data-tab="view-routes">Rotas Sugeridas</button>
+        </div>
 
-    <div id="suggest-route" class="tab-content">
-        <form id="suggestRouteForm">
-            <input type="text" id="name" placeholder="Seu Nome">
-            <input type="text" id="origin" placeholder="ICAO Origem">
-            <input type="text" id="destination" placeholder="ICAO Destino">
-            <button type="submit">Sugerir Rota</button>
-        </form>
-    </div>
+        <div id="suggest-route" class="tab-content active">
+            <form id="suggestRouteForm">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                
+                <input type="text" 
+                       id="name" 
+                       placeholder="Seu Nome ou Apelido"
+                       required
+                       minlength="3"
+                       maxlength="30">
+                
+                <input type="text" 
+                       id="origin" 
+                       placeholder="Código ICAO de Origem (ex: SBGR)"
+                       pattern="^[A-Z]{4}$"
+                       title="Digite exatamente 4 letras maiúsculas"
+                       required
+                       maxlength="4">
+                
+                <input type="text" 
+                       id="destination" 
+                       placeholder="Código ICAO de Destino (ex: SBRJ)"
+                       pattern="^[A-Z]{4}$"
+                       title="Digite exatamente 4 letras maiúsculas"
+                       required
+                       maxlength="4">
+                
+                <button type="submit">Enviar Sugestão</button>
+            </form>
+        </div>
 
-    <div id="view-routes" class="tab-content">
-        <div id="routesContainer"></div>
-    </div>
+        <div id="view-routes" class="tab-content">
+            <div id="routesContainer" class="routes-grid" 
+                
+            </div>
+        </div>
+    </main>
 
-    <div id="adminLogin" class="admin-panel">
-        <h2>Login Admin</h2>
-        <form id="adminLoginForm">
-            <input type="text" id="adminUsername" placeholder="Username">
-            <input type="password" id="adminPassword" placeholder="Senha">
-            <button type="submit">Entrar</button>
-        </form>
-    </div>
-
-    <div id="adminDashboard" class="admin-panel">
-        <h2>Painel Admin</h2>
-        <div id="adminRoutesContainer"></div>
-    </div>
     <footer>
-        <p>Feito com muito <span class="odio">ódio</span> por VH e com uma ajudinha do C3</p>
+        <p>Desenvolvido com muito
+            <span class="odio">ódio</span> por VH e com uma ajudinha do C3 e do Davi
+        </p>
     </footer>
+
+    <div id="changelogOverlay" class="changelog-overlay">
+        <div class="changelog-window">
+            <div class="changelog-header">
+                <h2>📝 Últimas Atualizações</h2>
+                <button id="closeChangelog" class="close-btn">&times;</button>
+            </div>
+            
+            <div class="changelog-content">
+                <div class="changelog-version">
+                    <h3>Versão 0.2</h3>
+                    <ul>
+                        <li>⚙ Painel Admin adcionado</li>
+                        <li>👮‍♂️ Sistema de segurança para previnir inputs, alem de ICAOs</li>
+                        <li>📜 Sistema de changelog adicionado</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="changelog-footer">
+                <button id="dontShowAgain" class="secondary-btn">Não Mostrar Mais</button>
+            </div>
+        </div>
+    </div>
+
     <script src="/static/script.js"></script>
 </body>
 </html>
