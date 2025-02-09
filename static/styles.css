@@ -33,7 +33,7 @@ header h1 {
     margin: 0;
     color: var(--primary-color);
     text-shadow: 0 0 10px rgba(245, 166, 35, 0.3);
-    padding-left: 125px;
+    padding-left: 130px;
 }
 
 button {
