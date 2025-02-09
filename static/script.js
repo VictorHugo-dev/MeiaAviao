@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
         },
 
         handleDispatch: function(origin, destination) {
-            const simbriefURL = `https://www.simbrief.com/system/dispatch.php?orig=${origin}&dest=${destination}`;
+            const simbriefURL = `https://www.simbrief.com/system/dispatch.php?airline=&fltnum=3061&orig=${origin}&dest=${destination}`;
             window.open(simbriefURL, '_blank');
         }
     };
