@@ -26,6 +26,7 @@ header {
     max-width: 100%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     position: relative;
+    align-items: center;
 }
 
 header h1 {
@@ -33,7 +34,8 @@ header h1 {
     margin: 0;
     color: var(--primary-color);
     text-shadow: 0 0 10px rgba(245, 166, 35, 0.3);
-    padding-left: 130px;
+    padding-left: 64.5px;
+    animation: brilho2 5s infinite alternate ease-in-out;
 }
 
 button {
@@ -79,7 +81,7 @@ main {
     justify-content: center;
     gap: 1.5rem;
     margin-bottom: 2.5rem;
-    padding-left: 55.5px;
+    padding-left: 46.5px;
 }
 
 .tabs button {
@@ -268,6 +270,11 @@ footer {
 @keyframes brilho {
     0%, 100% { text-shadow: 0 0 10px rgba(255, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.6), 0 0 30px rgba(255, 0, 0, 0.4); }
     50% { text-shadow: 0 0 15px rgba(255, 0, 0, 1), 0 0 25px rgba(255, 0, 0, 0.8), 0 0 35px rgba(255, 0, 0, 0.6); }
+}
+
+@keyframes brilho2 {
+    0%, 100% { text-shadow: 0 0 10px rgb(243, 160, 6), 0 0 20px rgba(243, 161, 7, 0.658), 0 0 30px rgba(236, 193, 1, 0.986); }
+    50% { text-shadow: 0 0 15px rgba(255, 145, 0, 0.952), 0 0 25px rgba(247, 172, 10, 0.8), 0 0 35px rgba(251, 255, 0, 0.87); }
 }
 
 .odio {
