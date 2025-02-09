@@ -33,7 +33,7 @@ header h1 {
     margin: 0;
     color: var(--primary-color);
     text-shadow: 0 0 10px rgba(245, 166, 35, 0.3);
-    padding-left: 117px;
+    padding-left: 125px;
 }
 
 button {
@@ -79,7 +79,7 @@ main {
     justify-content: center;
     gap: 1.5rem;
     margin-bottom: 2.5rem;
-    padding-left: 46.5px;
+    padding-left: 55.5px;
 }
 
 .tabs button {
