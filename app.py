@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_from_directory
 from flask_wtf.csrf import CSRFProtect, generate_csrf
+from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import os
 from functools import wraps
@@ -10,10 +11,6 @@ app.secret_key = 'vaDERATEInGsTRaTIPSTYpHOlerTRAVAlIgArisIVernentEnT'
 csrf = CSRFProtect(app)
 
 DATABASE_NAME = 'routes.db'
-ADMIN_CREDENTIALS = {
-    'username': 'MeiaAviaoAdminUser',
-    'password': 'XbdvCcpdJvVVPRUlHadw'
-}
 
 class Route:
     def __init__(self, route_id, name, origin, destination):
@@ -45,6 +42,22 @@ def init_db():
                 destination TEXT NOT NULL CHECK(length(destination) = 4)
             )
         ''')
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS admin (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                password_hash TEXT NOT NULL
+            )
+        ''')
+        cursor = conn.execute('SELECT 1 FROM admin LIMIT 1')
+        if not cursor.fetchone():
+            username = 'MeiaAviaoAdminUser'
+            password = 'XbdvCcpdJvVVPRUlHadw'
+            password_hash = generate_password_hash(password)
+            conn.execute(
+                'INSERT INTO admin (username, password_hash) VALUES (?, ?)',
+                (username, password_hash)
+            )
         conn.commit()
 
 def admin_required(f):
@@ -126,7 +139,13 @@ def admin_login():
         username = request.form.get('username')
         password = request.form.get('password')
         
-        if username == ADMIN_CREDENTIALS['username'] and password == ADMIN_CREDENTIALS['password']:
+        with get_db() as conn:
+            admin_user = conn.execute(
+                'SELECT password_hash FROM admin WHERE username = ?',
+                (username,)
+            ).fetchone()
+        
+        if admin_user and check_password_hash(admin_user['password_hash'], password):
             session['admin'] = True
             return redirect(url_for('admin_panel'))
         return render_template('admin_login.html', error='Credenciais inválidas')
