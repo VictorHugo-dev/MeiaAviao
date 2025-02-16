@@ -42,22 +42,6 @@ def init_db():
                 destination TEXT NOT NULL CHECK(length(destination) = 4)
             )
         ''')
-        conn.execute('''
-            CREATE TABLE IF NOT EXISTS admin (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT UNIQUE NOT NULL,
-                password_hash TEXT NOT NULL
-            )
-        ''')
-        cursor = conn.execute('SELECT 1 FROM admin LIMIT 1')
-        if not cursor.fetchone():
-            username = 'MeiaAviaoAdminUser'
-            password = 'XbdvCcpdJvVVPRUlHadw'
-            password_hash = generate_password_hash(password)
-            conn.execute(
-                'INSERT INTO admin (username, password_hash) VALUES (?, ?)',
-                (username, password_hash)
-            )
         conn.commit()
 
 def admin_required(f):
